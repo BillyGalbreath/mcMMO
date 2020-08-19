@@ -755,9 +755,10 @@ public class PlayerListener implements Listener {
             }
         }
 
+        Material rightHandType = player.getInventory().getItemInOffHand().getType();;
         switch (event.getAction()) {
             case RIGHT_CLICK_BLOCK:
-                if(player.getInventory().getItemInOffHand().getType() != Material.AIR && !player.isInsideVehicle() && !player.isSneaking()) {
+                if(rightHandType != Material.AIR && rightHandType != Material.TOTEM_OF_UNDYING && !player.isInsideVehicle() && !player.isSneaking()) {
                     break;
                 }
 
@@ -820,7 +821,7 @@ public class PlayerListener implements Listener {
                 break;
 
             case RIGHT_CLICK_AIR:
-                if(player.getInventory().getItemInOffHand().getType() != Material.AIR && !player.isInsideVehicle() && !player.isSneaking()) {
+                if(rightHandType != Material.AIR && rightHandType != Material.TOTEM_OF_UNDYING && !player.isInsideVehicle() && !player.isSneaking()) {
                     break;
                 }
                 
