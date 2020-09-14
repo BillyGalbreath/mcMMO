@@ -5,8 +5,8 @@ import com.gmail.nossr50.mcMMO;
 import com.gmail.nossr50.util.StringUtils;
 import com.gmail.nossr50.util.compat.layers.attackcooldown.PlayerAttackCooldownExploitPreventionLayer;
 import com.gmail.nossr50.util.compat.layers.persistentdata.AbstractPersistentDataLayer;
-import com.gmail.nossr50.util.compat.layers.persistentdata.SpigotPersistentDataLayer;
-import com.gmail.nossr50.util.compat.layers.persistentdata.SpigotTemporaryDataLayer;
+import com.gmail.nossr50.util.compat.layers.persistentdata.SpigotPersistentDataLayer_1_13;
+import com.gmail.nossr50.util.compat.layers.persistentdata.SpigotPersistentDataLayer_1_14;
 import com.gmail.nossr50.util.nms.NMSVersion;
 import com.gmail.nossr50.util.platform.MinecraftGameVersion;
 import org.bukkit.command.CommandSender;
@@ -67,10 +67,10 @@ public class CompatibilityManager {
     private void initPersistentDataLayer() {
         if(minecraftGameVersion.getMinorVersion().asInt() >= 14 || minecraftGameVersion.getMajorVersion().asInt() >= 2) {
 
-            persistentDataLayer = new SpigotPersistentDataLayer();
+            persistentDataLayer = new SpigotPersistentDataLayer_1_14();
         } else {
 
-            persistentDataLayer = new SpigotTemporaryDataLayer();
+            persistentDataLayer = new SpigotPersistentDataLayer_1_13();
         }
 
         supportedLayers.put(CompatibilityType.PERSISTENT_DATA, true);
@@ -122,6 +122,8 @@ public class CompatibilityManager {
                         return NMSVersion.NMS_1_16_1;
                     } else if(minecraftGameVersion.getPatchVersion().asInt() == 2) {
                         return NMSVersion.NMS_1_16_2;
+                    } else if(minecraftGameVersion.getPatchVersion().asInt() == 3) {
+                        return NMSVersion.NMS_1_16_3;
                     }
             }
         }

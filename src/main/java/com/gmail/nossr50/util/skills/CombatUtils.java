@@ -256,18 +256,6 @@ public final class CombatUtils {
         
         double finalDamage = event.getDamage();
 
-        if (target instanceof Player && PrimarySkillType.UNARMED.getPVPEnabled()) {
-            UnarmedManager unarmedManager = UserManager.getPlayer((Player) target).getUnarmedManager();
-
-            if (unarmedManager.canDeflect()) {
-                event.setCancelled(unarmedManager.deflectCheck());
-
-                if (event.isCancelled()) {
-                    return;
-                }
-            }
-        }
-
         if (archeryManager.canSkillShot()) {
             //Not Additive
             finalDamage = archeryManager.skillShot(initialDamage);
@@ -414,6 +402,10 @@ public final class CombatUtils {
 
                 if (target.getType() != EntityType.CREEPER && !Misc.isNPCEntityExcludingVillagers(player) && PrimarySkillType.TAMING.getPermissions(player)) {
                     McMMOPlayer mcMMOPlayer = UserManager.getPlayer(player);
+
+                    if(mcMMOPlayer == null)
+                        return;
+
                     TamingManager tamingManager = mcMMOPlayer.getTamingManager();
                     tamingManager.attackTarget(target);
                 }
