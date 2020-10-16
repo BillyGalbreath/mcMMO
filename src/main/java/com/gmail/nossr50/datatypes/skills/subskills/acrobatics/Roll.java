@@ -22,7 +22,7 @@ import com.gmail.nossr50.util.skills.SkillActivationType;
 import com.gmail.nossr50.util.skills.SkillUtils;
 import com.gmail.nossr50.util.sounds.SoundManager;
 import com.gmail.nossr50.util.sounds.SoundType;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
@@ -116,7 +116,7 @@ public class Roll extends AcrobaticsSubSkill {
      * @param player target player
      */
     @Override
-    public void addStats(ComponentBuilder componentBuilder, Player player) {
+    public void addStats(TextComponent.Builder componentBuilder, Player player) {
         String rollChance, rollChanceLucky, gracefulRollChance, gracefulRollChanceLucky;
 
         /* Values related to the player */

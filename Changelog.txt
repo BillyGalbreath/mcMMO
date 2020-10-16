@@ -1,3 +1,96 @@
+Version 2.1.150
+    (API) Fake events in mcMMO now implement 'FakeEvent' (thanks TheBusyBiscuit)
+
+Version 2.1.149
+    Added a new config file 'persistent_data.yml'
+    Almost all persistent mob data is now off by default and needs to be turned on in persistent_data.yml (new config file) for performance concerns
+
+NOTES:
+There are some performance issues with how Spigot/MC saves NBT when you start adding NBT to mobs, because of this I have decided that the new persistent data from 2.1.148 is now opt-in.
+
+Not every server will suffer a TPS hit when using the persistent data options, but there is a significant IO cost which can affect TPS if you have them on
+
+I am therefore making many persistent options (the problematic ones involving mobs) opt-in so only those aware of the performance risk will be using the feature.
+
+Persistent data on mobs was a new feature that was introduced in 2.1.148, it was not in mcMMO for the last 10 years and most of you probably didn't even know that it was missing
+
+An example of persistent data would be, normally mcMMO would give 0 XP for a mob from a mob spawner, in the last 10 years if the server rebooted then those existing mobs would give XP again. But with the persistent data option turned on in persistentdata.yml they will be saved to disk, and mcMMO will not forget about them upon reboot.
+
+For now it is not recommended to use persistent data without monitoring performance of ticks afterwards to make sure it was something your server could handle.
+
+I have a solution in mind to make persistent data not so expensive, but writing the code for that will take some time. This will serve as an interim fix.
+
+I am going to focus on Tridents & Crossbows instead of that alternative solution, so don't expect it anytime soon. Use persistent data only if you understand the potential performance cost risk.
+@
+Version 2.1.148
+    Fixed a memory leak involving entity metadata
+    Alchemy progression is now more reasonable (delete skillranks.yml or edit it yourself to receive the change, see notes)
+    Made some optimizations to combat processing
+    New experience multiplier labeled 'Eggs' in experience.yml with a default value of 0 (previously mobs from eggs were using the Mobspawner experience multiplier)
+    New experience multiplier labeled 'Nether_Portal' in experience.yml with a default value of 0
+    New experience multiplier labeled 'Player_Tamed' in experience.yml with a default value of 0
+    New advanced.yml config setting 'Skills.Mining.SuperBreaker.AllowTripleDrops' defaults to true
+
+    Fixed a bug where mobs from eggs were only tracked if it was dispensed (egg tracking now tracks from egg items as well)
+    Fixed a bug where egg spawned mobs were sometimes not marked as being from an egg (used in experience multipliers)
+    Fixed a bug where entities transformed by a single event (such as lightning) weren't tracked properly if there was more than one entity involved
+    mmodebug now prints out some information about final damage when attacking an entity in certain circumstances
+
+    (1.14+ required)
+        Mobs spawned from mob spawners are tracked persistently and are no longer forgotten about after a restart
+        Tamed mobs are tracked persistently and are no longer forgotten about after a restart
+        Egg spawned mobs are tracked persistently and are no longer forgotten about after a restart
+        Nether Portal spawned mobs are tracked persistently and are no longer forgotten about after a restart
+        Endermen who target endermite are tracked persistently and are no longer forgotten about after a restart
+        COTW spawned mobs are tracked persistently and are no longer forgotten about after a restart
+        Player bred mobs are tracked persistently and are no longer forgotten about after a restart
+        Player tamed mobs are tracked persistently and are no longer forgotten about after a restart
+
+    NOTES:
+    Egg mobs & Nether portal pigs being assigned to the mobspawner xp multiplier didn't make sense to me, so it has been changed. They have their own XP multipliers now.
+    While working on making data persistent I stumbled upon some alarming memory leak candidates, one of them was 7 years old. Sigh.
+    Alchemy now progresses much smoother, with rank 2 no longer unlocking right away. Thanks to Momshroom for pointing out this oddity. Delete skillranks.yml or edit it yourself to recieve this change.
+    https://gist.github.com/nossr50/4c8efc980314781a960a3bdd7bb34f0d This link shows the new Alchemy progression in skillranks.yml feel free to copy paste (or just delete the file and regenerate it)
+    There's no persistent API for entities in Spigot for 1.13.2, but in the future I'll wire up NMS and write it to NBT myself.
+    This means the new persistence stuff requires 1.14.0 or higher, if you're still on 1.13.2 for now that stuff will behave like it always did
+
+Version 2.1.147
+    Fixed a bug where players below the level threshold on a hardcore mode enabled server would gain levels on death in certain circumstances
+
+Version 2.1.146
+    A bug where players would disconnect from mcMMO messages has been fixed (thanks kashike / read notes)
+        It should be noted this was NOT an mcMMO bug, but a bug within Spigot since Spigot 1.16
+    A dupe exploit has been fixed
+    Improvements were made to tracking player placed blocks in mcMMO
+    Players no longer lose levels below the level threshold in hardcore mode
+    Hardcore now only applies penalties to levels above threshold
+
+    NOTES:
+    Shout out to Kashike
+    Kashike is a developer on the mcMMO team, however after I recruited him had a lot of life stuff come at him and has./tn't had a chance to contribute until now!
+
+    JSON is used by Minecraft for a lot of stuff, in this case the JSON mcMMO made use of was related to displaying text in chat or displaying text on the clients screen in other places such as the action bar, there's been a bad bug in Spigot since 1.16 that would disconnect players some of the time when sending JSON components.
+    mcMMO makes heavy use of these components, so since spigot has yet to fix the bug I decided we needed a work around for the time being.
+    The library named 'adventure' is developed by the Kyori organization, which is Kashike's baby.
+    Kashike is a very talented and skilled developer and he did the work on this patch to solve this issue.
+
+    This is a link to an bug report I did on this bug on Spigot's issue tracker, it is my understanding they have yet to find a way to reliably reproduce this bug.
+    If you have any information please post about it in this thread.
+
+    https://hub.spigotmc.org/jira/browse/SPIGOT-6056
+    Although mcMMO solved this issue by switching to Kyori's Adventure library for sending JSON Components, most Spigot plugins have not implemented a work around like this and will continue to make players disconnect until it is solved within Spigot.
+
+    Hardcore changes
+    If you set a level threshold of 100 and player with 150 levels dies, they should never lose more than 50 levels as the first 100 are considered part of the threshold.
+    Prior to this change in this exact same scenario a player could be penalized and be put below the threshold.
+
+    Shout out to HexedHero for reporting the dupe exploit and providing a demonstration of how to replicate it
+
+    Tridents & Crossbows update
+    It is still being worked on but it won't make a September release.
+    October is the new target release but I am terrible with estimates so take it with a grain of salt!
+
+
 Version 2.1.145
     Reverted 'Changed one of the PlayerInteractEvent listeners to ignore cancelled events' from 2.1.144
 
